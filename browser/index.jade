@@ -1,9 +1,10 @@
 !!! 5
 html
   head
-    title Redirect WWW - Yes, No, but not Maybe
+    title How to redirect www to non-www and redirect non-www to www
     link(rel="canonical", href="http://redirect-www.org")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="description", content="You're in one of two camps: www to non-www (no-www) or the non-www to www (yes-www). Either way you're gonna need to learn how to properly redirect. Welcome.")
     include css/bootstrap.min.css
     include css/style.css
   body
@@ -19,56 +20,78 @@ html
             We're here to make the choices clear and the implementation easy.
 
       .row
-        .col-lg-6
-          h2 Want to get Naked?
+        h2 How to Redirect with...
 
-          p.lead.
-            www.example.com -&gt; example.com
+        ul
+          li
+            a(href="#redirect-www") DNS via redirect-www.org
+          li
+            a(href="#apache") Apache
+          li
+            a(href="#nginx") nginx
+          li
+            a(href="#nodejs") Node.JS (ConnectJS / ExpressJS)
 
-          table.table
-            tr
-              th Type
-              th Host (example)
-              th Answer
-              th TTL
-            tr
-              td CNAME
-              td <strong>www</strong>.example.com
-              td no.redirect-www.org
-              td 300
-            tr
-              td CNAME
-              td <strong>www.ex</strong>.ample.com
-              td no.redirect-www.org
-              td 300
+      article#redirect-www
+        .row
+          .col-lg-6
+            h2 Want to get Naked?
 
-          p.
-            Point your DNS record to <code>no.redirect-www.org</code>.
+            p.lead.
+              www.example.com -&gt; example.com
 
-        .col-lg-6
-          h2 Or put on another layer?
-          p.lead.
-            example.com -&gt; www.example.com
+            table.table
+              tr
+                th Type
+                th Host (example)
+                th Answer
+                th TTL
+              tr
+                td CNAME
+                td <strong>www</strong>.example.com
+                td no.redirect-www.org
+                td 300
+              tr
+                td CNAME
+                td <strong>www.ex</strong>.ample.com
+                td no.redirect-www.org
+                td 300
 
-          table.table
-            tr
-              th Type
-              th Host (example)
-              th Answer
-              th TTL
-            tr
-              td A
-              td example.com
-              td 192.241.238.7
-              td 300
-            tr
-              td CNAME
-              td <strong>ex</strong>.ample.com
-              td yes.redirect-www.org
-              td 300
+            p.
+              Point your DNS CNAME to <code>no.redirect-www.org</code>.
+            p.
+              See it in action:
+            pre.
+              curl -v http://www.no.redirect-www.org
 
-          p.
-            Point your DNS record to <code>yes.redirect-www.org</code>.
+          .col-lg-6
+            h2 Or put on another layer?
+            p.lead.
+              example.com -&gt; www.example.com
+
+            table.table
+              tr
+                th Type
+                th Host (example)
+                th Answer
+                th TTL
+              tr
+                td A
+                td example.com
+                td 192.241.238.7
+                td 300
+              tr
+                td CNAME
+                td <strong>ex</strong>.ample.com
+                td yes.redirect-www.org
+                td 300
+
+            p.
+              Point your DNS A record to <code>192.241.238.7</code>.
+            p.
+              See it in action:
+            pre.
+              curl -v http://yes.redirect-www.org
 
       .row
         h2 What's this redirect-www.org all about?
@@ -157,7 +180,7 @@ html
       .row
         h2 How do I do my own redirects?
         
-      article
+      article#nginx
         .row
           h2 Nginx
           p.
@@ -194,7 +217,7 @@ html
                   ...
               }
 
-      article
+      article#apache
         .row
           h2 Apache
           p.
@@ -248,7 +271,7 @@ html
               RewriteBase /
               RewriteCond %{HTTP_HOST} !^www\.(.+)$ [NC]
               RewriteRule ^/(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]
-      article
+      article#nodejs
         .row
           h2 NodeJS (ConnectJS, ExpressJS)
           p.
