@@ -24,7 +24,7 @@ html
 
         ul
           li
-            a(href="#redirect-www") DNS via redirect-www.org
+            a(href="#redirect-www") Web Forwarding via redirect-www.org
           li
             a(href="#apache") Apache
           li
@@ -33,65 +33,7 @@ html
             a(href="#nodejs") Node.JS (ConnectJS / ExpressJS)
 
       article#redirect-www
-        .row
-          .col-lg-6
-            h2 Want to get Naked?
-
-            p.lead.
-              www.example.com -&gt; example.com
-
-            table.table
-              tr
-                th Type
-                th Host (example)
-                th Answer
-                th TTL
-              tr
-                td CNAME
-                td <strong>www</strong>.example.com
-                td no.redirect-www.org
-                td 300
-              tr
-                td CNAME
-                td <strong>www.ex</strong>.ample.com
-                td no.redirect-www.org
-                td 300
-
-            p.
-              Point your DNS CNAME to <code>no.redirect-www.org</code>.
-            p.
-              See it in action:
-            pre.
-              curl -v http://www.no.redirect-www.org
-
-          .col-lg-6
-            h2 Or put on another layer?
-            p.lead.
-              example.com -&gt; www.example.com
-
-            table.table
-              tr
-                th Type
-                th Host (example)
-                th Answer
-                th TTL
-              tr
-                td A
-                td example.com
-                td 192.241.238.7
-                td 300
-              tr
-                td CNAME
-                td <strong>ex</strong>.ample.com
-                td yes.redirect-www.org
-                td 300
-
-            p.
-              Point your DNS A record to <code>192.241.238.7</code>.
-            p.
-              See it in action:
-            pre.
-              curl -v http://yes.redirect-www.org
+        include includes/redirect-www
 
       .row
         h2 What's this redirect-www.org all about?
@@ -181,196 +123,56 @@ html
         h2 How do I do my own redirects?
         
       article#nginx
-        .row
-          h2 Nginx
-          p.
-            One of the best and most popular webservers.
-
-        .row
-          .col-lg-6
-            h2 no-www
-            pre.
-              server {
-                  listen       80;
-                  server_name  www.example.com;
-                  return       301 $scheme://example.org$request_uri;
-              }
-
-              server {
-                  listen       80;
-                  server_name  example.com;
-                  ...
-              }
-
-          .col-lg-6
-            h2 yes-www
-            pre.
-              server {
-                  listen       80;
-                  server_name  example.org;
-                  return       301 $scheme://www.example.org$request_uri;
-              }
-
-              server {
-                  listen       80;
-                  server_name  www.example.org;
-                  ...
-              }
-
+        include includes/nginx
       article#apache
-        .row
-          h2 Apache
-          p.
-            Although it may not be one of the best webservers, it is one of the most popular.
-
-        .row
-          .col-lg-6
-            h2 no-www
-            .lead example.com.conf
-            pre.
-              &lt;VirtualHost *:80&gt;
-                  ServerName www.example.com
-                  Redirect permanent / http://example.com/
-              &lt;/VirtualHost&gt;
-              &lt;VirtualHost *:80&gt;
-                  ServerName example.com
-                  ...
-              &lt;/VirtualHost&gt;
-            .lead .htaccess
-            pre.
-              RewriteEngine On
-              RewriteCond %{HTTP_HOST} ^www\.example\.com [NC]
-              RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
-            .lead .htaccess generic
-            pre.
-              RewriteEngine On
-              RewriteBase /
-              RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-              RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
-
-          .col-lg-6
-            h2 yes-www
-            .lead example.com.conf
-            pre.
-              &lt;VirtualHost *:80&gt;
-                  ServerName example.com
-                  Redirect permanent / http://www.example.com/
-              &lt;/VirtualHost&gt;
-              &lt;VirtualHost *:80&gt;
-                  ServerName www.example.com
-                  ...
-              &lt;/VirtualHost&gt;
-            .lead .htaccess
-            pre.
-              RewriteEngine On
-              RewriteCond  %{HTTP_HOST}  example.org
-              RewriteRule  (.*)          http://www.example.org$1
-            .lead .htaccess generic
-            pre.
-              RewriteEngine On
-              RewriteBase /
-              RewriteCond %{HTTP_HOST} !^www\.(.+)$ [NC]
-              RewriteRule ^/(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]
+        include includes/apache
       article#nodejs
+        include includes/nodejs
+      article#other
         .row
-          h2 NodeJS (ConnectJS, ExpressJS)
-          p.
-            Although it may not be one of the best webservers, it is one of the most popular.
-
-        .row
-          .col-lg-6
-            h2 no-www
-            pre.
-              (function () {
-                'use strict';
-
-                var http = require('http')
-                  , server
-                  , port = process.argv[2] || 3000
-                  ;
-
-                function nowww(request, response) {
-                  var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
-                    , host = request.headers.host
-                    , href
-                    ;
-
-                  if (/^www\./i.test(host)) {
-                    host = host.replace(/^www\./i, '');
-                    href = protocol + host + request.url;
-                    response.statusCode = 301;
-                    response.setHeader('Location', href);
-                    response.write('Redirecting to ' + host + request.url + '');
-                    response.end();
-                    return;
-                  }
-
-                  // do more stuff
-                }
-
-                server = http.createServer(nowww);
-                server.listen(port, function () {
-                  console.log('listening', server.address());
-                });
-              }());
-
-          .col-lg-6
-            h2 yes-www
-            pre.
-              (function () {
-                'use strict';
-
-                var http = require('http')
-                  , server
-                  , port = process.argv[2] || 3000
-                  ;
-
-                function yeswww(request, response) {
-                  var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
-                    , host = request.headers.host
-                    , href
-                    ;
-
-                  if (!/^www\./i.test(host)) {
-                    host = 'www.' + host;
-                    href = protocol + host + request.url;
-                    response.statusCode = 301;
-                    response.setHeader('Location', href);
-                    response.write('Redirecting to ' + host + request.url + '');
-                    response.end();
-                    return;
-                  }
-
-                  // do more stuff
-                }
-
-                server = http.createServer(yeswww);
-                server.listen(port, function () {
-                  console.log('listening', server.address());
-                });
-              }());
+          h2
+            | Other methods...  
+            small
+              a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20other%20methods") make comment 
+          p
+            | Don't see what you're looking for here?  
+            a(href="https://github.com/coolaj86/redirect-www.org/new/master/browser/includes/") Add your own method 
+            | (use  
+            a(href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nginx.jade") nginx.jade
+            |   as an example) or 
+            a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Need%20an%20example%20for...") request an example
+            | .
 
     .container
       footer.footer
-        p
-          span Built by  
-          a(href="http://coolaj86.com") AJ ONeal
-          span .
-        p
-          span Code licensed under   
-          a(href="http://www.apache.org/licenses/LICENSE-2.0") Apache License v2.0
-          span , documentation under   
-          a(href="http://creativecommons.org/licenses/by/3.0/") CC BY 3.0
-          span .
+      p
+        span Built by  
+        a(href="http://coolaj86.com") AJ ONeal
+        span .
+      p
+        span Code licensed under   
+        a(href="http://www.apache.org/licenses/LICENSE-2.0") Apache License v2.0
+        span , documentation under   
+        a(href="http://creativecommons.org/licenses/by/3.0/") CC BY 3.0
+        span .
 
-        ul.footer-links
-          li
-            a(href="https://github.com/coolaj86/redirect-www.org") Fork on Github
-          li.muted •
-          li
-            a(href="https://github.com/coolaj86/redirect-www.org/issues") Report Bugs
+      ul.footer-links
+        li
+          a(href="https://github.com/coolaj86/redirect-www.org") Fork on Github
+        li.muted •
+        li
+          a(href="https://github.com/coolaj86/redirect-www.org/issues") Report Bugs
+        li.muted •
+        li
+          a(href="http://no-wwww.org") no-www.org
+        li.muted •
+        li
+          a(href="http://yes-wwww.org") yes-www.org
+        li.muted •
+        li
+          a(href="http://extra-wwww.org") extra-www.org
 
-    script
+    script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

@@ -1,0 +1,40 @@
+.row
+  h2
+    | Nginx   
+    small
+      a(href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nginx.jade") edit
+      |  |  
+      a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20nginx%20example") make comment
+  p.
+    One of the best and most popular webservers.
+
+.row
+  .col-lg-6
+    h2 no-www
+    pre.
+      server {
+          listen       80;
+          server_name  www.example.com;
+          return       301 $scheme://example.org$request_uri;
+      }
+
+      server {
+          listen       80;
+          server_name  example.com;
+          ...
+      }
+
+  .col-lg-6
+    h2 yes-www
+    pre.
+      server {
+          listen       80;
+          server_name  example.org;
+          return       301 $scheme://www.example.org$request_uri;
+      }
+
+      server {
+          listen       80;
+          server_name  www.example.org;
+          ...
+      }

@@ -1,0 +1,58 @@
+.row
+  h2
+    | Apache  
+    small
+      a(href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/apache.jade") edit
+      |  |  
+      a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20Apache%20example") make comment
+  p.
+    Although it may not be one of the best webservers, it is one of the most popular.
+
+.row
+  .col-lg-6
+    h2 no-www
+    .lead example.com.conf
+    pre.
+      &lt;VirtualHost *:80&gt;
+          ServerName www.example.com
+          Redirect permanent / http://example.com/
+      &lt;/VirtualHost&gt;
+      &lt;VirtualHost *:80&gt;
+          ServerName example.com
+          ...
+      &lt;/VirtualHost&gt;
+    .lead .htaccess
+    pre.
+      RewriteEngine On
+      RewriteCond %{HTTP_HOST} ^www\.example\.com [NC]
+      RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
+    .lead .htaccess generic
+    pre.
+      RewriteEngine On
+      RewriteBase /
+      RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+      RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+  .col-lg-6
+    h2 yes-www
+    .lead example.com.conf
+    pre.
+      &lt;VirtualHost *:80&gt;
+          ServerName example.com
+          Redirect permanent / http://www.example.com/
+      &lt;/VirtualHost&gt;
+      &lt;VirtualHost *:80&gt;
+          ServerName www.example.com
+          ...
+      &lt;/VirtualHost&gt;
+    .lead .htaccess
+    pre.
+      RewriteEngine On
+      RewriteCond  %{HTTP_HOST}  example.org
+      RewriteRule  (.*)          http://www.example.org$1
+    .lead .htaccess generic
+    pre.
+      RewriteEngine On
+      RewriteBase /
+      RewriteCond %{HTTP_HOST} !^www\.(.+)$ [NC]
+      RewriteRule ^/(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]
