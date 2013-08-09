@@ -8,16 +8,16 @@ html
     include css/bootstrap.min.css
     include css/style.css
   body
-    header
     .container
-      .row
-        .jumbotron
-          h1 redirect-www.org
-          p.
-            No matter whether you're for or against <code>www.</code>,
-            you're still goinna <code>301</code>.
-          p.
-            We're here to make the choices clear and the implementation easy.
+      header
+        .row
+          .jumbotron
+            h1 redirect-www.org
+            p.
+              No matter whether you're for or against <code>www.</code>,
+              you're still goinna <code>301</code>.
+            p.
+              We're here to make the choices clear and the implementation easy.
 
       .row
         h2 How to Redirect with...
@@ -26,11 +26,13 @@ html
           li
             a(href="#redirect-www") Web Forwarding via redirect-www.org
           li
-            a(href="#apache") Apache
+            a(href="#apache") Apache (site.conf, .htaccess)
           li
             a(href="#nginx") nginx
           li
-            a(href="#nodejs") Node.JS (ConnectJS / ExpressJS)
+            a(href="#nodejs") Node.JS (ConnectJS, ExpressJS)
+          li
+            a(href="#nodejs") Other methods...
 
       article#redirect-www
         include includes/redirect-www
@@ -143,34 +145,34 @@ html
             a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Need%20an%20example%20for...") request an example
             | .
 
-    .container
-      footer.footer
-      p
-        span Built by  
-        a(href="http://coolaj86.com") AJ ONeal
-        span .
-      p
-        span Code licensed under   
-        a(href="http://www.apache.org/licenses/LICENSE-2.0") Apache License v2.0
-        span , documentation under   
-        a(href="http://creativecommons.org/licenses/by/3.0/") CC BY 3.0
-        span .
+    footer.footer
+      .container
+        p
+          span Built by  
+          a(href="http://coolaj86.com") AJ ONeal
+          span .
+        p
+          span Code licensed under   
+          a(href="http://www.apache.org/licenses/LICENSE-2.0") Apache License v2.0
+          span , documentation under   
+          a(href="http://creativecommons.org/licenses/by/3.0/") CC BY 3.0
+          span .
 
-      ul.footer-links
-        li
-          a(href="https://github.com/coolaj86/redirect-www.org") Fork on Github
-        li.muted •
-        li
-          a(href="https://github.com/coolaj86/redirect-www.org/issues") Report Bugs
-        li.muted •
-        li
-          a(href="http://no-wwww.org") no-www.org
-        li.muted •
-        li
-          a(href="http://yes-wwww.org") yes-www.org
-        li.muted •
-        li
-          a(href="http://extra-wwww.org") extra-www.org
+        ul.footer-links
+          li
+            a(href="https://github.com/coolaj86/redirect-www.org") Fork on Github
+          li.muted •
+          li
+            a(href="https://github.com/coolaj86/redirect-www.org/issues") Report Bugs
+          li.muted •
+          li
+            a(href="http://no-wwww.org") no-www.org
+          li.muted •
+          li
+            a(href="http://yes-wwww.org") yes-www.org
+          li.muted •
+          li
+            a(href="http://extra-wwww.org") extra-www.org
 
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
