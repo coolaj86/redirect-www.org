@@ -1,0 +1,31 @@
+{
+  "name": "redirect-www.org",
+  "version": "1.0.0",
+  "description": "Toggles www prefix for either style of no-www or yes-www",
+  "main": "redirect-www.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/redirect-www.org.git"
+  },
+  "keywords": [
+    "yes-www",
+    "no-www",
+    "non-www",
+    "www",
+    "redirect-www",
+    "redirect-www.org",
+    "yes-www.org",
+    "no-www.org"
+  ],
+  "author": "AJ ONeal",
+  "license": "Apache2",
+  "bugs": {
+    "url": "https://github.com/coolaj86/redirect-www.org/issues"
+  },
+  "dependencies": {
+    "connect": "~2.8.4"
+  }
+}

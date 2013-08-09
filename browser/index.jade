@@ -1,0 +1,333 @@
+!!! 5
+html
+  head
+    title Redirect WWW - Yes, No, but not Maybe
+    link(rel="canonical", href="http://redirect-www.org")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    include css/bootstrap.min.css
+  body
+    header
+    .container
+      .row
+        .jumbotron
+          h1 redirect-www.org
+          p.
+            No matter whether you're for or against <code>www.</code>,
+            you're still goinna <code>301</code>.
+          p.
+            We're here to make the choices clear and the implementation easy.
+
+      .row
+        .col-lg-6
+          h2 Want to get Naked?
+
+          p.lead.
+            www.example.com -&gt; example.com
+
+          table.table
+            tr
+              th Type
+              th Host (example)
+              th Answer
+              th TTL
+            tr
+              td CNAME
+              td <strong>www</strong>.example.com
+              td no.redirect-www.org
+              td 300
+            tr
+              td CNAME
+              td <strong>www.ex</strong>.ample.com
+              td no.redirect-www.org
+              td 300
+
+          p.
+            Point your DNS record to <code>no.redirect-www.org</code>.
+
+        .col-lg-6
+          h2 Or put on another layer?
+          p.lead.
+            example.com -&gt; www.example.com
+
+          table.table
+            tr
+              th Type
+              th Host (example)
+              th Answer
+              th TTL
+            tr
+              td A
+              td example.com
+              td 192.241.238.7
+              td 300
+            tr
+              td CNAME
+              td <strong>ex</strong>.ample.com
+              td yes.redirect-www.org
+              td 300
+
+          p.
+            Point your DNS record to <code>yes.redirect-www.org</code>.
+
+      .row
+        h2 What's this redirect-www.org all about?
+        p.
+          <strong>First of all</strong>, we provide a free redirection service for the casual
+          website owners who have access to their custom domain's DNS settings,
+          but not experience with servers.
+        p.
+          <strong>Secondly</strong>, we explain how to set up www. redirection on your own
+          server and why you'd choose one over the other.
+        p.
+          That is all.
+
+      .row
+        h2 To go naked or not to go naked, that is the question!
+        p.
+          The two main <strong>arguments for <a href="http://no-www.org">no-www</a></strong>
+          (meaning to forgo the www. prefix) are that
+          <strong>it looks ugly</strong> and <strong>it's redundant</strong>.
+        p.
+          To the point of being ugly, I originally had "to www or not to www"
+          as the header of this section, but it just didn't look good.
+        p.
+          To the point of redundant... when I'm on the web, I'm on the web.
+          There's no sense in typing "www." just to remind me that I'm here - I'm plenty aware on my own.
+          It's not like I opened up Chrome intending to eat cereal and accidentally
+          ended up on the web. And it's not as if I can type something else
+          to get something else. The only thing that things that have a space to
+          type a "www." is the web. Now even I'm becoming redundant!
+        p.
+          The two main <strong>arguments for <a href="http://yes-www.org">yes-www</a></strong>
+          (meaning to ensure the www. prefix) are that
+          <strong>bare domains can't use CNAMEs</strong>
+          and <strong>browsers' cookie security policies</strong>
+          work differently at different subdomain levels.
+        p.
+          To the point of DNS CNAMEs, it's a lot easier for me to switch hosting services
+          and keep the same CNAME than it is to switch services and keep the same IP address.
+          It's a legitimate concern when you're scaling your site or application.
+        p.
+          To the point of browser cookies their security policies,
+          consider how google has so many different services you can be logged into
+          at a time:
+          gmail (now mail.google.com), plus.google.com, search (www.google.com), etc.
+
+      .row
+        h2 Why either or? Why should I care?
+        p.
+          Note that "to redirect or not to redirect" is <em>not</em> the question.
+          A redirect providers users with a consistent experience and also
+          lets search engines and other content providers
+          know which style you prefer.
+
+        p.
+          In cases where you don't control the server and can't
+          specify a redirect (such as blogger),
+          you most likely still can use a meta redirect,
+          which functions equivalently in for user experience
+          and search engine optimization.
+
+        pre.
+          &lt;meta http-equiv="refresh" content="0;URL='http://example.com/my-permalink/'"/&gt;
+
+        p.
+          You should also always specify a <em>canonical</em> link to the prefered
+          domain. This will be used by Google, Facebook, Twitter, and social content
+          providers to attribute and accumulate likes, shares, etc.
+        
+        pre.
+          &lt;link rel="canonical" href="http://example.com"/&gt;
+
+        //-p. While there are special exceptions -
+          namely vanity domains such as
+          <a href="http://script.aculo.us">script.aculo.us</a>
+          and
+          <a href="http://aj.the.dj">aj.the.dj</a>,
+          which suffer none of the technical ills of
+          almost certainly not use <code>www.</code>, .
+          ing from a
+          <code>www.</code> subdomain to a naked
+          domain (<code>example.com</code>) or the other way around.
+          There are certainly a variety of opinions as to whether
+          you redirect to or from www., but one thing <em>is</em> clear:
+          you should be redirecting!
+
+      .row
+        h2 How do I do my own redirects?
+        
+      article
+        .row
+          h2 Nginx
+          p.
+            One of the best and most popular webservers.
+
+        .row
+          .col-lg-6
+            h2 no-www
+            pre.
+              server {
+                  listen       80;
+                  server_name  www.example.com;
+                  return       301 $scheme://example.org$request_uri;
+              }
+
+              server {
+                  listen       80;
+                  server_name  example.com;
+                  ...
+              }
+
+          .col-lg-6
+            h2 yes-www
+            pre.
+              server {
+                  listen       80;
+                  server_name  example.org;
+                  return       301 $scheme://www.example.org$request_uri;
+              }
+
+              server {
+                  listen       80;
+                  server_name  www.example.org;
+                  ...
+              }
+
+      article
+        .row
+          h2 Apache
+          p.
+            Although it may not be one of the best webservers, it is one of the most popular.
+
+        .row
+          .col-lg-6
+            h2 no-www
+            .lead example.com.conf
+            pre.
+              &lt;VirtualHost *:80&gt;
+                  ServerName www.example.com
+                  Redirect permanent / http://example.com/
+              &lt;/VirtualHost&gt;
+              &lt;VirtualHost *:80&gt;
+                  ServerName example.com
+                  ...
+              &lt;/VirtualHost&gt;
+            .lead .htaccess
+            pre.
+              RewriteEngine On
+              RewriteCond %{HTTP_HOST} ^www\.example\.com [NC]
+              RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
+            .lead .htaccess generic
+            pre.
+              RewriteEngine On
+              RewriteBase /
+              RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+              RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+          .col-lg-6
+            h2 yes-www
+            .lead example.com.conf
+            pre.
+              &lt;VirtualHost *:80&gt;
+                  ServerName example.com
+                  Redirect permanent / http://www.example.com/
+              &lt;/VirtualHost&gt;
+              &lt;VirtualHost *:80&gt;
+                  ServerName www.example.com
+                  ...
+              &lt;/VirtualHost&gt;
+            .lead .htaccess
+            pre.
+              RewriteEngine On
+              RewriteCond  %{HTTP_HOST}  example.org
+              RewriteRule  (.*)          http://www.example.org$1
+            .lead .htaccess generic
+            pre.
+              RewriteEngine On
+              RewriteBase /
+              RewriteCond %{HTTP_HOST} !^www\.(.+)$ [NC]
+              RewriteRule ^/(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]
+      article
+        .row
+          h2 NodeJS (ConnectJS, ExpressJS)
+          p.
+            Although it may not be one of the best webservers, it is one of the most popular.
+
+        .row
+          .col-lg-6
+            h2 no-www
+            pre.
+              (function () {
+                'use strict';
+
+                var http = require('http')
+                  , server
+                  , port = process.argv[2] || 3000
+                  ;
+
+                function nowww(request, response) {
+                  var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+                    , host = request.headers.host
+                    , href
+                    ;
+
+                  if (/^www\./i.test(host)) {
+                    host = host.replace(/^www\./i, '');
+                    href = protocol + host + request.url;
+                    response.statusCode = 301;
+                    response.setHeader('Location', href);
+                    response.write('Redirecting to ' + host + request.url + '');
+                    response.end();
+                    return;
+                  }
+
+                  // do more stuff
+                }
+
+                server = http.createServer(nowww);
+                server.listen(port, function () {
+                  console.log('listening', server.address());
+                });
+              }());
+
+          .col-lg-6
+            h2 yes-www
+            pre.
+              (function () {
+                'use strict';
+
+                var http = require('http')
+                  , server
+                  , port = process.argv[2] || 3000
+                  ;
+
+                function yeswww(request, response) {
+                  var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+                    , host = request.headers.host
+                    , href
+                    ;
+
+                  if (!/^www\./i.test(host)) {
+                    host = 'www.' + host;
+                    href = protocol + host + request.url;
+                    response.statusCode = 301;
+                    response.setHeader('Location', href);
+                    response.write('Redirecting to ' + host + request.url + '');
+                    response.end();
+                    return;
+                  }
+
+                  // do more stuff
+                }
+
+                server = http.createServer(yeswww);
+                server.listen(port, function () {
+                  console.log('listening', server.address());
+                });
+              }());
+
+    .container
+      footer.footer
+
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+    include js/bootstrap.min.js
