@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>How to redirect www to non-www and redirect non-www to www</title>
+    <link rel="canonical" href="https://redirect-www.org">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="You're in one of two camps: www to non-www (no-www) or the non-www to www (yes-www). Either way you're gonna need to learn how to properly redirect. Welcome.">
+    <!--include css/bootstrap.min.css-->
+    <!--include css/style.css-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="row">
+          <div class="jumbotron">
+            <h1>redirect-www.org</h1>
+            <p>
+              No matter whether you're for or against <code>www.</code>,
+              you're still goinna <code>301</code>.
+            </p>
+            <p>
+              We're here to make the choices clear and the implementation easy.
+
+            </p>
+          </div>
+        </div>
+      </header>
+      <div class="row">
+        <h2>How to Redirect with...</h2>
+        <ul>
+          <li><a href="#redirect-www">redirect-www.org (Web Forwarding / URL Redirection)</a></li>
+          <li><a href="#apache">Apache (site.conf, .htaccess)</a></li>
+          <li><a href="#nginx">nginx</a></li>
+          <li><a href="#nodejs">Node.JS (ConnectJS / ExpressJS)</a></li>
+          <li><a href="#nodejs">Other methods...</a></li>
+        </ul>
+      </div>
+      <article id="redirect-www">
+        <div class="row">
+          <h2>Web Forwarding via redirect-www.org</h2>
+          <p>
+            You can use
+            redirect-www.org for web forwarding of www to non-www or non-www to www
+            sites without any changes to your server's configuration.
+            All you need to do is add a CNAME or A record to your DNS for your domain.
+          </p>
+          <p>
+            Let's say you point www.example.com to no.redirect-www.org.
+            You will be telling your DNS to bring all traffic for www.example.com to
+            our server at no.redirect-www.org.
+            Once the traffic reaches our server, it issues a 301 redirect to whatever domain
+            you provided, sans www (example.com in this case), and the control is back to you.
+          </p>
+          <p>
+            The same is true in reverse - yes.redirect-www.org will issue a redirect to any
+            domain without a leading www to the same domain with the leading www added.
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <h2>Want to get Naked?</h2>
+            <p class="lead">
+              www.example.com -&gt; example.com
+
+            </p>
+            <table class="table">
+              <tr>
+                <th>Type</th>
+                <th>Host (example)</th>
+                <th>Answer</th>
+                <th>TTL</th>
+              </tr>
+              <tr>
+                <td>CNAME</td>
+                <td><strong>www</strong>.example.com</td>
+                <td>no.redirect-www.org</td>
+                <td>300</td>
+              </tr>
+              <tr>
+                <td>CNAME</td>
+                <td><strong>www.ex</strong>.ample.com</td>
+                <td>no.redirect-www.org</td>
+                <td>300</td>
+              </tr>
+            </table>
+            <p>Point your DNS CNAME to <code>no.redirect-www.org</code>.</p>
+            <p>See it in action:</p>
+            <pre>curl -v http://www.no.redirect-www.org
+</pre>
+          </div>
+          <div class="col-lg-6">
+            <h2>Or put on another layer?</h2>
+            <p class="lead">
+              example.com -&gt; www.example.com
+
+            </p>
+            <table class="table">
+              <tr>
+                <th>Type</th>
+                <th>Host (example)</th>
+                <th>Answer</th>
+                <th>TTL</th>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td>example.com</td>
+                <td>192.241.238.7</td>
+                <td>300</td>
+              </tr>
+              <tr>
+                <td>CNAME</td>
+                <td><strong>ex</strong>.ample.com</td>
+                <td>yes.redirect-www.org</td>
+                <td>300</td>
+              </tr>
+            </table>
+            <p>Point your DNS A record to <code>192.241.238.7</code>.</p>
+            <p>See it in action:</p>
+            <pre>curl -v http://yes.redirect-www.org</pre>
+          </div>
+        </div>
+      </article>
+      <div class="row">
+        <h2>What's this redirect-www.org all about?</h2>
+        <p>
+          <strong>First of all</strong>, we provide a free redirection service for the casual
+          website owners who have access to their custom domain's DNS settings,
+          but not experience with servers.
+        </p>
+        <p>
+          <strong>Secondly</strong>, we explain how to set up www. redirection on your own
+          server and why you'd choose one over the other.
+        </p>
+        <p>
+          That is all.
+
+        </p>
+      </div>
+      <div class="row">
+        <h2>To go naked or not to go naked, that is the question!</h2>
+        <p>
+          The two main <strong>arguments for <a href="http://no-www.org">no-www</a></strong>
+          (meaning to forgo the www. prefix) are that
+          <strong>it looks ugly</strong> and <strong>it's redundant</strong>.
+        </p>
+        <p>
+          To the point of being ugly, I originally had "to www or not to www"
+          as the header of this section, but it just didn't look good.
+        </p>
+        <p>
+          To the point of redundant... when I'm on the web, I'm on the web.
+          There's no sense in typing "www." just to remind me that I'm here - I'm plenty aware on my own.
+          It's not like I opened up Chrome intending to eat cereal and accidentally
+          ended up on the web. And it's not as if I can type something else
+          to get something else. The only thing that things that have a space to
+          type a "www." have is the web. Now even I'm becoming redundant!
+        </p>
+        <p>
+          The two main <strong>arguments for <a href="http://yes-www.org">yes-www</a></strong>
+          (meaning to ensure the www. prefix) are that
+          <strong>bare domains can't use CNAMEs</strong>
+          and <strong>browsers' cookie security policies</strong>
+          work differently at different subdomain levels.
+        </p>
+        <p>
+          To the point of DNS CNAMEs, it's a lot easier for me to switch hosting services
+          and keep the same CNAME than it is to switch services and keep the same IP address.
+          It's a legitimate concern when you're scaling your site or application.
+        </p>
+        <p>
+          To the point of browser cookies their security policies,
+          consider how google has so many different services you can be logged into
+          at a time:
+          gmail (now mail.google.com), plus.google.com, search (www.google.com), etc.
+
+        </p>
+      </div>
+      <div class="row">
+        <h2>Why either or? Why should I care?</h2>
+        <p>
+          Note that "to redirect or not to redirect" is <em>not</em> the question.
+          A redirect providers users with a consistent experience and also
+          lets search engines and other content providers
+          know which style you prefer.
+
+        </p>
+        <p>
+          In cases where you don't control the server and can't
+          specify a redirect (such as blogger),
+          you most likely still can use a meta redirect,
+          which functions equivalently in for user experience
+          and search engine optimization.
+
+        </p>
+        <pre>&lt;meta http-equiv="refresh" content="0;URL='http://example.com/my-permalink/'" /&gt;
+</pre>
+        <p>
+          You should also always specify a <em>canonical</em> link to the prefered
+          domain. This will be used by Google, Facebook, Twitter, and social content
+          providers to attribute and accumulate likes, shares, etc.
+
+        </p>
+        <pre>&lt;link rel="canonical" href="http://example.com/my-permalink/" /&gt;
+</pre>
+      </div>
+      <div class="row">
+        <h2>How do I do my own redirects?</h2>
+      </div>
+      <article id="nginx">
+        <div class="row">
+          <h2>Nginx   <small><a href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nginx.jade">edit</a> |  <a href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20nginx%20example">make comment</a></small></h2>
+          <p>
+            One of the best and most popular webservers.
+
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <h2>no-www</h2>
+            <pre>server {
+    listen       80;
+    server_name  www.example.com;
+    return       301 $scheme://example.org$request_uri;
+}
+
+server {
+    listen       80;
+    server_name  example.com;
+    ...
+}
+</pre>
+          </div>
+          <div class="col-lg-6">
+            <h2>yes-www</h2>
+            <pre>server {
+    listen       80;
+    server_name  example.org;
+    return       301 $scheme://www.example.org$request_uri;
+}
+
+server {
+    listen       80;
+    server_name  www.example.org;
+    ...
+}</pre>
+          </div>
+        </div>
+      </article>
+      <article id="apache">
+        <div class="row">
+          <h2>Apache  <small><a href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/apache.jade">edit</a> |  <a href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20Apache%20example">make comment</a></small></h2>
+          <p>
+            Although it may not be one of the best webservers, it is one of the most popular.
+
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <h2>no-www</h2>
+            <div class="lead">example.com.conf</div>
+            <pre>&lt;VirtualHost *:80&gt;
+    ServerName www.example.com
+    Redirect permanent / http://example.com/
+&lt;/VirtualHost&gt;
+&lt;VirtualHost *:80&gt;
+    ServerName example.com
+    ...
+&lt;/VirtualHost&gt;</pre>
+            <div class="lead">.htaccess</div>
+            <pre>RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.example\.com [NC]
+RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]</pre>
+            <div class="lead">.htaccess generic</div>
+            <pre>RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+</pre>
+          </div>
+          <div class="col-lg-6">
+            <h2>yes-www</h2>
+            <div class="lead">example.com.conf</div>
+            <pre>&lt;VirtualHost *:80&gt;
+    ServerName example.com
+    Redirect permanent / http://www.example.com/
+&lt;/VirtualHost&gt;
+&lt;VirtualHost *:80&gt;
+    ServerName www.example.com
+    ...
+&lt;/VirtualHost&gt;</pre>
+            <div class="lead">.htaccess</div>
+            <pre>RewriteEngine On
+RewriteCond  %{HTTP_HOST}  example.org
+RewriteRule  (.*)          http://www.example.org$1</pre>
+            <div class="lead">.htaccess generic</div>
+            <pre>RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_HOST} !^www\.(.+)$ [NC]
+RewriteRule ^/(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]</pre>
+          </div>
+        </div>
+      </article>
+      <article id="nodejs">
+        <div class="row">
+          <h2>Node.JS (ConnectJS, ExpressJS)   <small><a href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nodejs.jade">edit</a> |  <a href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20Node.JS%20example">make comment</a></small></h2>
+          <p>
+            It's fairly straight-forward and inuitive to set up redirects using Node.JS with Connect and / or Express.
+
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <h2>no-www</h2>
+            <pre>// nowww.js
+(function () {
+  'use strict';
+
+  function nowww(request, response, next) {
+    var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+      , host = request.headers.host
+      , href
+      ;
+
+    // no www. present, nothing to do here
+    if (!/^www\./i.test(host)) {
+      next();
+      return;
+    }
+
+    // remove www.
+    host = host.replace(/^www\./i, '');
+    href = protocol + host + request.url;
+    response.statusCode = 301;
+    response.setHeader('Location', href);
+    response.write('Redirecting to ' + host + request.url + '');
+    response.end();
+  }
+
+  module.exports = function () {
+    nowww;
+  }
+
+  // use like so:
+  // nowww = require('./nowww')
+  // app.use(nowww())
+}());
+</pre>
+          </div>
+          <div class="col-lg-6">
+            <h2>yes-www</h2>
+            <pre>// yeswww.js
+(function () {
+  'use strict';
+
+  function yeswww(request, response) {
+    var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+      , host = request.headers.host
+      , href
+      ;
+
+    // www. already there, nothing to do here
+    if (/^www\./i.test(host)) {
+      next();
+      return;
+    }
+
+    // add www.
+    host = 'www.' + host;
+    href = protocol + host + request.url;
+    response.statusCode = 301;
+    response.setHeader('Location', href);
+    response.write('Redirecting to ' + host + request.url + '');
+    response.end();
+  }
+
+  module.exports = function () {
+    yeswww;
+  }
+
+  // use like so:
+  // nowww = require('./yeswww')
+  // app.use(yeswww())
+}());</pre>
+          </div>
+        </div>
+      </article>
+      <article id="other">
+        <div class="row">
+          <h2>Other methods... &nbsp;<small><a href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20other%20methods">make comment&nbsp;</a></small></h2>
+          <p>Don't see what you're looking for here? &nbsp;<a href="https://github.com/coolaj86/redirect-www.org/new/master/browser/includes/">Add your own method&nbsp;</a>(use &nbsp;<a href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nginx.jade">nginx.jade</a>  as an example) or&nbsp;<a href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Need%20an%20example%20for...">request an example</a>.</p>
+        </div>
+      </article>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p><span>Built by &nbsp;</span><a href="http://coolaj86.com">AJ ONeal</a><span>&nbsp;on August 9th, 2013 and running strong.</span></p>
+        <p><span>Code licensed under  &nbsp;</span><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a><span>, documentation under  &nbsp;</span><a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a><span>.</span></p>
+        <ul class="footer-links">
+          <li><a href="https://github.com/coolaj86/redirect-www.org">Fork on Github</a></li>
+          <li class="muted">•</li>
+          <li><a href="https://github.com/coolaj86/redirect-www.org/issues">Report Bugs</a></li>
+          <li class="muted">•</li>
+          <li><a href="http://no-wwww.org">no-www.org</a></li>
+          <li class="muted">•</li>
+          <li><a href="http://yes-wwww.org">yes-www.org</a></li>
+        </ul>
+      </div>
+    </footer>
+    <script src="js/ga.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- include js/bootstrap.min.js-->
+  </body>
+</html>

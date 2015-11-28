@@ -1,0 +1,179 @@
+doctype html
+html
+  head
+    title How to redirect www to non-www and redirect non-www to www
+    link(rel="canonical", href="http://redirect-www.org")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="description", content="You're in one of two camps: www to non-www (no-www) or the non-www to www (yes-www). Either way you're gonna need to learn how to properly redirect. Welcome.")
+    //include css/bootstrap.min.css
+    //include css/style.css
+    link(rel="stylesheet", href="css/bootstrap.min.css")
+    link(rel="stylesheet", href="css/style.css")
+  body
+    .container
+      header
+        .row
+          .jumbotron
+            h1 redirect-www.org
+            p.
+              No matter whether you're for or against <code>www.</code>,
+              you're still goinna <code>301</code>.
+            p.
+              We're here to make the choices clear and the implementation easy.
+
+      .row
+        h2 How to Redirect with...
+
+        ul
+          li
+            a(href="#redirect-www") redirect-www.org (Web Forwarding / URL Redirection)
+          li
+            a(href="#apache") Apache (site.conf, .htaccess)
+          li
+            a(href="#nginx") nginx
+          li
+            a(href="#nodejs") Node.JS (ConnectJS / ExpressJS)
+          li
+            a(href="#nodejs") Other methods...
+
+      article#redirect-www
+        include includes/redirect-www
+
+      .row
+        h2 What's this redirect-www.org all about?
+        p.
+          <strong>First of all</strong>, we provide a free redirection service for the casual
+          website owners who have access to their custom domain's DNS settings,
+          but not experience with servers.
+        p.
+          <strong>Secondly</strong>, we explain how to set up www. redirection on your own
+          server and why you'd choose one over the other.
+        p.
+          That is all.
+
+      .row
+        h2 To go naked or not to go naked, that is the question!
+        p.
+          The two main <strong>arguments for <a href="http://no-www.org">no-www</a></strong>
+          (meaning to forgo the www. prefix) are that
+          <strong>it looks ugly</strong> and <strong>it's redundant</strong>.
+        p.
+          To the point of being ugly, I originally had "to www or not to www"
+          as the header of this section, but it just didn't look good.
+        p.
+          To the point of redundant... when I'm on the web, I'm on the web.
+          There's no sense in typing "www." just to remind me that I'm here - I'm plenty aware on my own.
+          It's not like I opened up Chrome intending to eat cereal and accidentally
+          ended up on the web. And it's not as if I can type something else
+          to get something else. The only thing that things that have a space to
+          type a "www." have is the web. Now even I'm becoming redundant!
+        p.
+          The two main <strong>arguments for <a href="http://yes-www.org">yes-www</a></strong>
+          (meaning to ensure the www. prefix) are that
+          <strong>bare domains can't use CNAMEs</strong>
+          and <strong>browsers' cookie security policies</strong>
+          work differently at different subdomain levels.
+        p.
+          To the point of DNS CNAMEs, it's a lot easier for me to switch hosting services
+          and keep the same CNAME than it is to switch services and keep the same IP address.
+          It's a legitimate concern when you're scaling your site or application.
+        p.
+          To the point of browser cookies their security policies,
+          consider how google has so many different services you can be logged into
+          at a time:
+          gmail (now mail.google.com), plus.google.com, search (www.google.com), etc.
+
+      .row
+        h2 Why either or? Why should I care?
+        p.
+          Note that "to redirect or not to redirect" is <em>not</em> the question.
+          A redirect providers users with a consistent experience and also
+          lets search engines and other content providers
+          know which style you prefer.
+
+        p.
+          In cases where you don't control the server and can't
+          specify a redirect (such as blogger),
+          you most likely still can use a meta redirect,
+          which functions equivalently in for user experience
+          and search engine optimization.
+
+        pre.
+          &lt;meta http-equiv="refresh" content="0;URL='http://example.com/my-permalink/'" /&gt;
+
+        p.
+          You should also always specify a <em>canonical</em> link to the prefered
+          domain. This will be used by Google, Facebook, Twitter, and social content
+          providers to attribute and accumulate likes, shares, etc.
+
+        pre.
+          &lt;link rel="canonical" href="http://example.com/my-permalink/" /&gt;
+
+        //-p. While there are special exceptions -
+          namely vanity domains such as
+          <a href="http://script.aculo.us">script.aculo.us</a>
+          and
+          <a href="http://aj.the.dj">aj.the.dj</a>,
+          which suffer none of the technical ills of
+          almost certainly not use <code>www.</code>, .
+          ing from a
+          <code>www.</code> subdomain to a naked
+          domain (<code>example.com</code>) or the other way around.
+          There are certainly a variety of opinions as to whether
+          you redirect to or from www., but one thing <em>is</em> clear:
+          you should be redirecting!
+
+      .row
+        h2 How do I do my own redirects?
+
+      article#nginx
+        include includes/nginx
+      article#apache
+        include includes/apache
+      article#nodejs
+        include includes/nodejs
+      article#other
+        .row
+          h2
+            | Other methods... &nbsp;
+            small
+              a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20other%20methods") make comment&nbsp;
+          p
+            | Don't see what you're looking for here? &nbsp;
+            a(href="https://github.com/coolaj86/redirect-www.org/new/master/browser/includes/") Add your own method&nbsp;
+            | (use &nbsp;
+            a(href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nginx.jade") nginx.jade
+            |   as an example) or&nbsp;
+            a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Need%20an%20example%20for...") request an example
+            | .
+
+    footer.footer
+      .container
+        p
+          span Built by &nbsp;
+          a(href="http://coolaj86.com") AJ ONeal
+          span &nbsp;on August 9th, 2013 and running strong.
+        p
+          span Code licensed under  &nbsp;
+          a(href="http://www.apache.org/licenses/LICENSE-2.0") Apache License v2.0
+          span , documentation under  &nbsp;
+          a(href="http://creativecommons.org/licenses/by/3.0/") CC BY 3.0
+          span .
+
+        ul.footer-links
+          li
+            a(href="https://github.com/coolaj86/redirect-www.org") Fork on Github
+          li.muted •
+          li
+            a(href="https://github.com/coolaj86/redirect-www.org/issues") Report Bugs
+          li.muted •
+          li
+            a(href="http://no-wwww.org") no-www.org
+          li.muted •
+          li
+            a(href="http://yes-wwww.org") yes-www.org
+
+    script(src="js/ga.js")
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+    script(src="js/bootstrap.min.js")
+    // include js/bootstrap.min.js

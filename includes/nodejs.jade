@@ -1,0 +1,84 @@
+.row
+  h2
+    | Node.JS (ConnectJS, ExpressJS)   
+    small
+      a(href="https://github.com/coolaj86/redirect-www.org/blob/master/browser/includes/nodejs.jade") edit
+      |  |  
+      a(href="https://github.com/coolaj86/redirect-www.org/issues/new?title=Comment%20on%20Node.JS%20example") make comment
+  p.
+    It's fairly straight-forward and inuitive to set up redirects using Node.JS with Connect and / or Express.
+
+.row
+  .col-lg-6
+    h2 no-www
+    pre.
+      // nowww.js
+      (function () {
+        'use strict';
+
+        function nowww(request, response, next) {
+          var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+            , host = request.headers.host
+            , href
+            ;
+
+          // no www. present, nothing to do here
+          if (!/^www\./i.test(host)) {
+            next();
+            return;
+          }
+
+          // remove www.
+          host = host.replace(/^www\./i, '');
+          href = protocol + host + request.url;
+          response.statusCode = 301;
+          response.setHeader('Location', href);
+          response.write('Redirecting to ' + host + request.url + '');
+          response.end();
+        }
+
+        module.exports = function () {
+          nowww;
+        }
+
+        // use like so:
+        // nowww = require('./nowww')
+        // app.use(nowww())
+      }());
+
+  .col-lg-6
+    h2 yes-www
+    pre.
+      // yeswww.js
+      (function () {
+        'use strict';
+
+        function yeswww(request, response) {
+          var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+            , host = request.headers.host
+            , href
+            ;
+
+          // www. already there, nothing to do here
+          if (/^www\./i.test(host)) {
+            next();
+            return;
+          }
+
+          // add www.
+          host = 'www.' + host;
+          href = protocol + host + request.url;
+          response.statusCode = 301;
+          response.setHeader('Location', href);
+          response.write('Redirecting to ' + host + request.url + '');
+          response.end();
+        }
+
+        module.exports = function () {
+          yeswww;
+        }
+
+        // use like so:
+        // nowww = require('./yeswww')
+        // app.use(yeswww())
+      }());

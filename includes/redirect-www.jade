@@ -1,0 +1,75 @@
+.row
+  h2 Web Forwarding via redirect-www.org
+  p.
+    You can use 
+    redirect-www.org for web forwarding of www to non-www or non-www to www
+    sites without any changes to your server's configuration.
+    All you need to do is add a CNAME or A record to your DNS for your domain.
+  p.
+    Let's say you point www.example.com to no.redirect-www.org.
+    You will be telling your DNS to bring all traffic for www.example.com to
+    our server at no.redirect-www.org.
+    Once the traffic reaches our server, it issues a 301 redirect to whatever domain
+    you provided, sans www (example.com in this case), and the control is back to you.
+  p.
+    The same is true in reverse - yes.redirect-www.org will issue a redirect to any
+    domain without a leading www to the same domain with the leading www added.
+.row
+  .col-lg-6
+    h2 Want to get Naked?
+
+    p.lead.
+      www.example.com -&gt; example.com
+
+    table.table
+      tr
+        th Type
+        th Host (example)
+        th Answer
+        th TTL
+      tr
+        td CNAME
+        td <strong>www</strong>.example.com
+        td no.redirect-www.org
+        td 300
+      tr
+        td CNAME
+        td <strong>www.ex</strong>.ample.com
+        td no.redirect-www.org
+        td 300
+
+    p.
+      Point your DNS CNAME to <code>no.redirect-www.org</code>.
+    p.
+      See it in action:
+    pre.
+      curl -v http://www.no.redirect-www.org
+
+  .col-lg-6
+    h2 Or put on another layer?
+    p.lead.
+      example.com -&gt; www.example.com
+
+    table.table
+      tr
+        th Type
+        th Host (example)
+        th Answer
+        th TTL
+      tr
+        td A
+        td example.com
+        td 192.241.238.7
+        td 300
+      tr
+        td CNAME
+        td <strong>ex</strong>.ample.com
+        td yes.redirect-www.org
+        td 300
+
+    p.
+      Point your DNS A record to <code>192.241.238.7</code>.
+    p.
+      See it in action:
+    pre.
+      curl -v http://yes.redirect-www.org
