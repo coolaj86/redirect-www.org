@@ -24,7 +24,7 @@
     .lead .htaccess
     pre.
       RewriteEngine On
-      RewriteCond %{HTTP_HOST} ^www\.example\.com [NC]
+      RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
       RewriteRule ^ %{REQUEST_SCHEME}://example.com%{REQUEST_URI} [L,R=301]
     .lead .htaccess generic
     pre.
@@ -54,5 +54,5 @@
     pre.
       RewriteEngine On
       RewriteBase /
-      RewriteCond %{HTTP_HOST} !^www\..+$ [NC]
-      RewriteRule ^ %{REQUEST_SCHEME}://www\.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+      RewriteCond %{HTTP_HOST} !^www\.. [NC]
+      RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
